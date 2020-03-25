@@ -14,7 +14,8 @@
       "model": "recipients"
     },
     "donation": {
-      "model": "donation"
+      "model": "donation",
+      "via": "repartitions"
     },
     "quantity": {
       "type": "integer"

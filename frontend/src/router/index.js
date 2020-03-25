@@ -7,6 +7,9 @@ import store from '@/store';
 
 import Home from '../views/Home.vue'
 import Signin from '../views/Signin.vue'
+import ReportBySite from '../views/ReportBySite.vue'
+import ReportByUser from '../views/ReportByUser.vue'
+import Tasks from '../views/Tasks.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +18,21 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/report/site',
+    name: 'ReportBySite',
+    component: ReportBySite
+  },
+  {
+    path: '/report/user',
+    name: 'ReportByUser',
+    component: ReportByUser
+  },
+  {
+    path: '/tasks',
+    name: 'Tasks',
+    component: Tasks
   },
   {
     path: '/login',

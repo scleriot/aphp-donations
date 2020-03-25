@@ -93,6 +93,10 @@
     "pledgDate": {
       "type": "date",
       "required": true
+    },
+    "repartitions": {
+      "via": "donation",
+      "collection": "donation-repartition"
     }
   }
 }
