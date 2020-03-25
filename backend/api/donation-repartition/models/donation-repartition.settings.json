@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "connection": "default",
+  "collectionName": "donation_repartitions",
+  "info": {
+    "name": "DonationRepartition"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "recipient": {
+      "model": "recipients"
+    },
+    "donation": {
+      "model": "donation"
+    },
+    "quantity": {
+      "type": "integer"
+    }
+  }
+}

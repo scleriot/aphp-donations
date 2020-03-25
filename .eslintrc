@@ -1,0 +1,35 @@
+module.exports = {
+    root: true,
+    env: {
+        node: true
+    },
+    extends: [
+        'plugin:vue/essential',
+        '@vue/airbnb',
+        '@vue/typescript'
+    ],
+    rules: {
+        'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+        'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+        "comma-dangle": 0,
+        quotes: 0,
+        "no-param-reassign": ["error", { props: false }],
+        camelcase: 0,
+        "max-len": 0,
+        semi: 0,
+        "func-names": 0,
+        "class-methods-use-this": 0,
+        "no-restricted-globals": 0,
+        "import/prefer-default-export": 0,
+        "import/extensions": 0,
+        "import/no-unresolved": 0,
+        "import/no-extraneous-dependencies": ["error", { devDependencies: true, optionalDependencies: true, peerDependencies: true }],
+        "object-curly-newline": 0,
+        indent: ["warn", 4, { ArrayExpression: "first" }],
+        "prefer-destructuring": ["error", { "array": true, "object": true }, { "enforceForRenamedProperties": false }],
+        "no-plusplus": ["warn", { "allowForLoopAfterthoughts": true }],
+        test: /\.styl$/,
+        loader: ['style-loader', 'css-loader', 'stylus-loader']
+    }
+  }
+  

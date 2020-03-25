@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/donation-repartitions",
+      "handler": "donation-repartition.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/donation-repartitions/count",
+      "handler": "donation-repartition.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/donation-repartitions/:id",
+      "handler": "donation-repartition.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/donation-repartitions",
+      "handler": "donation-repartition.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/donation-repartitions/:id",
+      "handler": "donation-repartition.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/donation-repartitions/:id",
+      "handler": "donation-repartition.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "kind": "collectionType",
+  "connection": "default",
+  "collectionName": "donations",
+  "info": {
+    "name": "Donation"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "donor": {
+      "type": "string",
+      "required": true
+    },
+    "contact": {
+      "type": "string",
+      "required": true
+    },
+    "role": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "phone1": {
+      "type": "string"
+    },
+    "phone2": {
+      "type": "string"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "food",
+        "hosting",
+        "transport",
+        "hr",
+        "others"
+      ],
+      "required": true
+    },
+    "user": {
+      "plugin": "users-permissions",
+      "model": "user"
+    },
+    "comment": {
+      "type": "richtext"
+    },
+    "quantity": {
+      "type": "integer",
+      "required": true
+    },
+    "unit": {
+      "type": "string",
+      "required": true
+    },
+    "receivedAPHP": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "plannedDeliveryDate": {
+      "type": "date",
+      "required": false
+    },
+    "measurable": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pledg",
+        "received",
+        "distributed"
+      ],
+      "required": true,
+      "default": "pledg"
+    },
+    "status_usage": {
+      "type": "enumeration",
+      "enum": [
+        "tobeprocessed",
+        "processing",
+        "processed"
+      ],
+      "default": "tobeprocessed",
+      "required": true
+    },
+    "pledgDate": {
+      "type": "date",
+      "required": true
+    }
+  }
+}
