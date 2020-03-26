@@ -58,7 +58,7 @@ export default {
                 const response = await strapi.login(this.email, this.password);
                 this.loading = false;
                 this.$store.dispatch("login", { user: response.user, jwt: response.jwt });
-                this.$router.go(-1);
+                window.location.href = "/"
             } catch (err) {
                 console.log(err)
                 this.loading = false;
