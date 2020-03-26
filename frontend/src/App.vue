@@ -7,7 +7,7 @@
                 @click="$router.push({ name: 'Home' })"
             >
                 <span>AP-HP</span>
-                <span class="font-weight-light">Donations</span>
+                <span class="font-weight-light">Suivi des dons</span>
             </v-toolbar-title>
 
             <v-spacer></v-spacer>
@@ -64,6 +64,10 @@
 <script>
 export default {
     name: "App",
+
+    mounted() {
+        document.title = "APHP Suivi des dons"
+    },
 
     data: () => ({
         drawer: true
