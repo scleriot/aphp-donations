@@ -1,0 +1,23 @@
+{
+  "name": "donations",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scleriot/aphp-donations.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/scleriot/aphp-donations/issues"
+  },
+  "homepage": "https://github.com/scleriot/aphp-donations#readme",
+  "dependencies": {
+    "pm2": "^4.2.3"
+  }
+}
