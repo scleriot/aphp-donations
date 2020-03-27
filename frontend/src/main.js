@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import vueKanban from 'vue-kanban'
 
+import 'unfetch/polyfill'
+
 import VuetifyDialog from 'vuetify-dialog'
 import 'vuetify-dialog/dist/vuetify-dialog.css'
 

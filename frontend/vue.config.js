@@ -1,6 +1,10 @@
 module.exports = {
     "transpileDependencies": [
-        "vuetify"
+        "vuetify",
+        "vuetify-dialog",
+        "vue-kanban",
+        "strapi-sdk-javascript",
+        "unfetch"
     ],
     devServer: {
         disableHostCheck: true,
