@@ -1,13 +1,15 @@
 <template>
     <v-container fluid>
         <v-row>
-            <v-col cols="2">
+            <v-col cols="12" md="4" lg="3">
                 <v-btn color="success" @click="addNewDonation">Ajouter un nouveau don</v-btn>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="12" md="4" lg="3">
                 <v-btn color="warning" @click="downloadXLS">Télécharger Excel</v-btn>
             </v-col>
-            <v-col cols="2">
+        </v-row>
+        <v-row>
+            <v-col cols="12" sm="6" md="3">
                 <v-autocomplete
                     :items="types"
                     label="Type de don"
@@ -16,7 +18,7 @@
                     item-value="value"
                 ></v-autocomplete>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="12" sm="6" md="3">
                 <v-autocomplete
                     :items="status"
                     label="Statut"
@@ -25,7 +27,7 @@
                     item-value="value"
                 ></v-autocomplete>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="12" sm="6" md="3">
                 <v-autocomplete
                     :items="status_usage"
                     label="Statut opérationnel"

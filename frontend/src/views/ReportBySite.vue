@@ -6,7 +6,7 @@
                     <v-card-title>Rapport par établissement</v-card-title>
                     <v-card-text>
                         <v-row>
-                            <v-col cols="3">
+                            <v-col cols="12" sm="6" md="3">
                                 <v-autocomplete
                                     :items="recipients"
                                     v-model="selectedRecipient"
@@ -16,7 +16,7 @@
                                     return-object
                                 ></v-autocomplete>
                             </v-col>
-                            <v-col cols="2">
+                            <v-col cols="12" sm="6" md="2">
                                 <v-autocomplete
                                     :items="types"
                                     label="Type de don"
@@ -25,7 +25,7 @@
                                     item-value="value"
                                 ></v-autocomplete>
                             </v-col>
-                            <v-col cols="2">
+                            <v-col cols="12" sm="6" md="2">
                                 <v-autocomplete
                                     :items="status"
                                     label="Statut"
@@ -34,7 +34,7 @@
                                     item-value="value"
                                 ></v-autocomplete>
                             </v-col>
-                            <v-col cols="2">
+                            <v-col cols="12" sm="6" md="2">
                                 <v-autocomplete
                                     :items="status_usage"
                                     label="Statut opérationnel"
