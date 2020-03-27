@@ -525,21 +525,23 @@ export default {
                     }
                 });
 
-                const graphql = repartitions.reduce((acc, e) => {
-                    acc += `
-                    delete_${e.id}: deleteDonationRepartition(input: {
-                        where: { id: "${e.id}" }
-                    }) {
-                        donationRepartition { id }
-                    }
-                    `
-                    return acc
-                }, "")
-                await this.$apollo.mutate({
-                    mutation: gql`mutation {
-                        ${graphql}
-                    }`
-                })
+                if (repartitions && repartitions.length > 0) {
+                    const graphql = repartitions.reduce((acc, e) => {
+                        acc += `
+                        delete_${e.id}: deleteDonationRepartition(input: {
+                            where: { id: "${e.id}" }
+                        }) {
+                            donationRepartition { id }
+                        }
+                        `
+                        return acc
+                    }, "")
+                    await this.$apollo.mutate({
+                        mutation: gql`mutation {
+                            ${graphql}
+                        }`
+                    })
+                }
 
                 await this.$apollo.mutate({
                     mutation: gql`
