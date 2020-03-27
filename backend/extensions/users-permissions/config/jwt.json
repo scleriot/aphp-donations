@@ -1,3 +1,4 @@
 {
-  "jwtSecret": "29fa758d-0194-48ec-9afb-3419fb8959c3"
+  "jwtSecret": "29fa758d-0194-48ec-9afb-3419fb8959c3",
+  "expiresIn": 600
 }
