@@ -60,7 +60,8 @@
                                         v-slot:item.status="{ item }"
                                     >{{ item.status | statusLabel }}</template>
                                     <template v-slot:item.contact="{ item }">
-                                        <br />{{ item.contact }}
+                                        <br />
+                                        {{ item.contact }}
                                         <template
                                             v-if="item.role"
                                         >({{ item.role }})</template>
@@ -71,7 +72,8 @@
                                         >{{ item.email }}</a>
                                         <br />
                                         <a :href="`tel:${item.phone1}`">{{ item.phone1 }}</a>
-                                        <br /><br />
+                                        <br />
+                                        <br />
                                     </template>
                                     <template
                                         v-slot:item.pledgDate="{ item }"
@@ -104,10 +106,10 @@
 
 <script>
 import gql from "graphql-tag";
-import moment from "moment"
+import moment from "moment";
 import { json2excel } from "js2excel";
 
-import { statusLabel } from "@/helpers"
+import { statusLabel } from "@/helpers";
 
 export default {
     name: "ReportBySite",
@@ -120,21 +122,16 @@ export default {
                 status_usage: ""
             },
             headers: [
-                { text: "Statut du don", value: "status" },
                 { text: "Donateur", value: "donor" },
-                { text: "Contact", value: "contact" },
                 { text: "Don", value: "donation", sortable: false },
-                { text: "Date promesse", value: "pledgDate" },
-                { text: "Date livraison", value: "plannedDeliveryDate" },
-                { text: "Commentaire", value: "comment" },
-                { text: "Destinataires", value: "recipients" }
+                { text: "Destinataires", value: "recipients" },
+                { text: "Commentaire", value: "comment" }
             ],
             types: [
                 { text: "Tous", value: "" },
                 { text: "Alimentation", value: "food" },
                 { text: "Compétences-RH", value: "hr" },
-                { text: "Transport", value: "transport" },
-                { text: "Hébergement", value: "hosting" },
+                { text: "Bien-être", value: "wellbeing" },
                 { text: "Autre", value: "others" }
             ],
             status: [
@@ -152,17 +149,19 @@ export default {
         };
     },
     apollo: {
-        users: gql`query {
-            users {
-                id firstname lastname
+        users: gql`
+            query {
+                users {
+                    id
+                    firstname
+                    lastname
+                }
             }
-        }`,
+        `,
         donations: {
             query: gql`
                 query($userID: ID!) {
-                    donations(
-                        where: { user: $userID }
-                    ) {
+                    donations(where: { user: $userID }) {
                         id
                         donor
                         contact
@@ -182,8 +181,12 @@ export default {
                         pledgDate
 
                         repartitions {
-                            id quantity
-                            recipient { id name }
+                            id
+                            quantity
+                            recipient {
+                                id
+                                name
+                            }
                         }
                     }
                 }
@@ -200,14 +203,14 @@ export default {
     },
     computed: {
         filteredDonations() {
-            if(!this.donations) return []
+            if (!this.donations) return [];
 
-            return this.donations
-                .filter(e =>
+            return this.donations.filter(
+                e =>
                     e.type.indexOf(this.formFilter.type) != -1 &&
                     e.status.indexOf(this.formFilter.status) != -1 &&
                     e.status_usage.indexOf(this.formFilter.status_usage) != -1
-                )
+            );
         }
     },
 
@@ -228,7 +231,9 @@ export default {
             try {
                 json2excel({
                     data,
-                    name: `${moment().format("YYYYMMDD-HHmm")} ${this.selectedUser.lastname}`.substring(0, 30),
+                    name: `${moment().format("YYYYMMDD-HHmm")} ${
+                        this.selectedUser.lastname
+                    }`.substring(0, 30),
                     formateDate: "dd/mm/yyyy"
                 });
             } catch (e) {
@@ -242,7 +247,7 @@ export default {
             return moment(date).format("dddd DD/MM/YYYY");
         },
         statusLabel: function(status) {
-            return statusLabel(status)
+            return statusLabel(status);
         }
     }
 };

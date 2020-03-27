@@ -32,7 +32,6 @@
                                     <v-card-actions>
                                         <v-btn color="warning" @click="edit(opp.id)" text>Éditer</v-btn>&nbsp;
                                         <v-btn
-                                            v-if="opp.status_donation !== 'pledg'"
                                             color="success"
                                             @click="repartition(opp.id)"
                                             text

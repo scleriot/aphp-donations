@@ -83,7 +83,7 @@
                                     <template v-slot:activator="{ on }">
                                         <v-text-field
                                             v-model="form.pledgDate"
-                                            label="Date de promesse"
+                                            label="Date de l'offre"
                                             readonly
                                             v-on="on"
                                         ></v-text-field>
@@ -116,7 +116,7 @@
                                     <template v-slot:activator="{ on }">
                                         <v-text-field
                                             v-model="form.plannedDeliveryDate"
-                                            label="Date de livraison prévue"
+                                            label="Date de réception du don prévue"
                                             readonly
                                             v-on="on"
                                         ></v-text-field>
@@ -165,7 +165,7 @@
                             <v-col cols="4">
                                 <v-autocomplete
                                     :items="status_usage"
-                                    label="Statut gestion"
+                                    label="Statut du traitement"
                                     v-model="form.status_usage"
                                     item-text="text"
                                     item-value="value"
@@ -187,9 +187,10 @@
                 </v-row>
             </v-card-text>
             <v-card-actions>
-                <v-btn color="red" text @click="$emit('update:dialog', false)">Annuler</v-btn>
+                <v-btn color="gray" text @click="$emit('update:dialog', false)">Annuler</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn color="orange" text @click="save">Sauvegarder</v-btn>
+                <v-btn v-if="id" color="red" text @click="remove">Supprimer</v-btn>
+                <v-btn color="green" text @click="save">Sauvegarder</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -210,8 +211,7 @@ export default {
             types: [
                 { text: "Alimentation", value: "food" },
                 { text: "Compétences-RH", value: "hr" },
-                { text: "Transport", value: "transport" },
-                { text: "Hébergement", value: "hosting" },
+                { text: "Bien-être", value: "wellbeing" },
                 { text: "Autre", value: "others" }
             ],
             status: [
@@ -247,11 +247,15 @@ export default {
         };
     },
     apollo: {
-        users: gql`query {
-            users {
-                id firstname lastname
+        users: gql`
+            query {
+                users {
+                    id
+                    firstname
+                    lastname
+                }
             }
-        }`
+        `
     },
     watch: {
         async dialog() {
@@ -281,7 +285,9 @@ export default {
                                 status
                                 status_usage
                                 pledgDate
-                                user { id }
+                                user {
+                                    id
+                                }
                             }
                         }
                     `,
@@ -321,7 +327,7 @@ export default {
         async save() {
             if (!this.form.id) {
                 // CREATE
-                await this.$apollo.mutate({
+                const { data: { createDonation: { donation } } } = await this.$apollo.mutate({
                     mutation: gql`
                         mutation(
                             $donor: String!
@@ -383,7 +389,9 @@ export default {
                                     status
                                     status_usage
                                     pledgDate
-                                    user { id }
+                                    user {
+                                        id
+                                    }
                                 }
                             }
                         }
@@ -393,6 +401,7 @@ export default {
                         quantity: this.form.measurable ? this.form.quantity : 1
                     }
                 });
+                this.$emit("donation-add", donation)
             } else {
                 await this.$apollo.mutate({
                     mutation: gql`
@@ -458,7 +467,9 @@ export default {
                                     status
                                     status_usage
                                     pledgDate
-                                    user { id }
+                                    user {
+                                        id
+                                    }
                                 }
                             }
                         }
@@ -471,6 +482,83 @@ export default {
             }
 
             this.$emit("update:dialog", false);
+        },
+        async remove() {
+            const res = await this.$dialog.warning({
+                text:
+                    "Voulez vous vraiment supprimer ce don ? Cette action est irréversible",
+                title: "Attention",
+                icon: "mdi-alert",
+                actions: {
+                    false: "Annuler",
+                    true: "Supprimer"
+                }
+            });
+
+            if (res) {
+                const {
+                    data: { donationRepartitions: repartitions }
+                } = await this.$apollo.query({
+                    query: gql`
+                        query($donationID: ID!) {
+                            donationRepartitions(
+                                where: { donation: { id: $donationID } }
+                            ) {
+                                id
+                                quantity
+                                recipient {
+                                    id
+                                    name
+                                }
+                                donation {
+                                    id
+                                    donor
+                                    contact
+                                    quantity
+                                    unit
+                                }
+                            }
+                        }
+                    `,
+                    variables: {
+                        donationID: this.id
+                    }
+                });
+
+                const graphql = repartitions.reduce((acc, e) => {
+                    acc += `
+                    delete_${e.id}: deleteDonationRepartition(input: {
+                        where: { id: "${e.id}" }
+                    }) {
+                        donationRepartition { id }
+                    }
+                    `
+                    return acc
+                }, "")
+                await this.$apollo.mutate({
+                    mutation: gql`mutation {
+                        ${graphql}
+                    }`
+                })
+
+                await this.$apollo.mutate({
+                    mutation: gql`
+                        mutation($id: ID!) {
+                            deleteDonation(input: {
+                                where: { id: $id }
+                            }) {
+                                donation {
+                                    id
+                                }
+                            }
+                        }`,
+                    variables: {
+                        id: this.id
+                    }
+                });
+                this.$emit("donation-delete", this.id)
+                this.$emit("update:dialog", false);
+            }
         }
     },
     filters: {

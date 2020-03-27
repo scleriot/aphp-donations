@@ -25,24 +25,6 @@
                                     item-value="value"
                                 ></v-autocomplete>
                             </v-col>
-                            <v-col cols="12" sm="6" md="2">
-                                <v-autocomplete
-                                    :items="status"
-                                    label="Statut"
-                                    v-model="formFilter.status"
-                                    item-text="text"
-                                    item-value="value"
-                                ></v-autocomplete>
-                            </v-col>
-                            <v-col cols="12" sm="6" md="2">
-                                <v-autocomplete
-                                    :items="status_usage"
-                                    label="Statut opérationnel"
-                                    v-model="formFilter.status_usage"
-                                    item-text="text"
-                                    item-value="value"
-                                ></v-autocomplete>
-                            </v-col>
                             <v-col cols="2" v-if="selectedRecipient">
                                 <v-btn color="warning" @click="downloadXLS">Télécharger Excel</v-btn>
                             </v-col>
@@ -111,20 +93,15 @@ export default {
                 status_usage: ""
             },
             headers: [
-                { text: "Statut du don", value: "status" },
                 { text: "Donateur", value: "donor" },
-                { text: "Contact", value: "contact" },
                 { text: "Don", value: "donation", sortable: false },
-                { text: "Date promesse", value: "pledgDate" },
-                { text: "Date livraison", value: "plannedDeliveryDate" },
-                { text: "Commentaire", value: "comment" }
+                { text: "Date livraison", value: "plannedDeliveryDate" }
             ],
             types: [
                 { text: "Tous", value: "" },
                 { text: "Alimentation", value: "food" },
                 { text: "Compétences-RH", value: "hr" },
-                { text: "Transport", value: "transport" },
-                { text: "Hébergement", value: "hosting" },
+                { text: "Bien-être", value: "wellbeing" },
                 { text: "Autre", value: "others" }
             ],
             status: [

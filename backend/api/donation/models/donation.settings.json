@@ -34,8 +34,7 @@
       "type": "enumeration",
       "enum": [
         "food",
-        "hosting",
-        "transport",
+        "wellbeing",
         "hr",
         "others"
       ],
@@ -95,8 +94,8 @@
       "required": true
     },
     "repartitions": {
-      "via": "donation",
-      "collection": "donation-repartition"
+      "collection": "donation-repartition",
+      "via": "donation"
     }
   }
 }

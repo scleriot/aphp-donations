@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import vueKanban from 'vue-kanban'
 
+import VuetifyDialog from 'vuetify-dialog'
+import 'vuetify-dialog/dist/vuetify-dialog.css'
+
 import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify';
@@ -9,6 +12,12 @@ import store from './store'
 import "./style.css"
 
 Vue.config.productionTip = false
+
+Vue.use(VuetifyDialog, {
+  context: {
+    vuetify
+  }
+})
 
 Vue.use(vueKanban)
 

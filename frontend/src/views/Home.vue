@@ -68,17 +68,24 @@
                     </template>
                     <template v-slot:item.actions="{ item }">
                         <v-btn color="warning" @click="edit(item.id)">Éditer</v-btn>&nbsp;
-                        <v-btn
-                            v-if="item.status !== 'pledg'"
-                            color="success"
-                            @click="repartition(item.id)"
-                        >Répartir</v-btn>
+                        <v-btn color="success" @click="repartition(item.id)">Répartir</v-btn>
                     </template>
+                    <template
+                        v-slot:item.status_usage="{ item }"
+                    >{{ item.status_usage | statusUsageLabel }}</template>
+                    <template
+                        v-slot:item.owner="{ item }"
+                    >{{ item.user.firstname }} {{ item.user.lastname }}</template>
                 </v-data-table>
             </v-col>
         </v-row>
 
-        <donation-edition :id="editionID" :dialog.sync="showEditionDialog"></donation-edition>
+        <donation-edition
+            :id="editionID"
+            :dialog.sync="showEditionDialog"
+            @donation-delete="onDeleteDonation"
+            @donation-add="onAddDonation"
+        ></donation-edition>
         <repartition :donationID="repartitionDonationID" :dialog.sync="showRepartitionDialog"></repartition>
     </v-container>
 </template>
@@ -90,7 +97,7 @@ import { json2excel } from "js2excel";
 
 import DonationEdition from "@/components/DonationEdition.vue";
 import Repartition from "@/components/Repartition.vue";
-import { statusLabel } from "@/helpers";
+import { statusLabel, statusUsageLabel } from "@/helpers";
 
 export default {
     name: "Home",
@@ -110,21 +117,19 @@ export default {
                 status_usage: ""
             },
             headers: [
-                { text: "Statut du don", value: "status" },
                 { text: "Donateur", value: "donor" },
-                { text: "Contact", value: "contact" },
                 { text: "Don", value: "donation", sortable: false },
-                { text: "Date promesse", value: "pledgDate" },
-                { text: "Date livraison", value: "plannedDeliveryDate" },
-                { text: "Commentaire", value: "comment" },
+                { text: "Statut du don", value: "status" },
+                { text: "Date livraison prévue", value: "plannedDeliveryDate" },
+                { text: "Personne en charge", value: "owner", sortable: false },
+                { text: "Statut du traitement", value: "status_usage" },
                 { text: "Actions", value: "actions", sortable: false }
             ],
             types: [
                 { text: "Tous", value: "" },
                 { text: "Alimentation", value: "food" },
                 { text: "Compétences-RH", value: "hr" },
-                { text: "Transport", value: "transport" },
-                { text: "Hébergement", value: "hosting" },
+                { text: "Bien-être", value: "wellbeing" },
                 { text: "Autre", value: "others" }
             ],
             status: [
@@ -162,20 +167,24 @@ export default {
                     status
                     status_usage
                     pledgDate
+                    user {
+                        firstname
+                        lastname
+                    }
                 }
             }
         `
     },
     computed: {
         filteredDonations() {
-            if(!this.donations) return []
+            if (!this.donations) return [];
 
-            return this.donations
-                .filter(e =>
+            return this.donations.filter(
+                e =>
                     e.type.indexOf(this.formFilter.type) != -1 &&
                     e.status.indexOf(this.formFilter.status) != -1 &&
                     e.status_usage.indexOf(this.formFilter.status_usage) != -1
-                )
+            );
         }
     },
     methods: {
@@ -230,12 +239,25 @@ export default {
             try {
                 json2excel({
                     data,
-                    name: `${moment().format("YYYYMMDD-HHmm")} Donations`.substring(0, 30),
+                    name: `${moment().format(
+                        "YYYYMMDD-HHmm"
+                    )} Donations`.substring(0, 30),
                     formateDate: "dd/mm/yyyy"
                 });
             } catch (e) {
                 console.error("export error");
             }
+        },
+
+        onDeleteDonation(id) {
+            this.donations.splice(
+                this.donations.findIndex(e => e.id === id),
+                1
+            );
+        },
+
+        onAddDonation(donation) {
+            this.donations.splice(0, 0, { ...donation });
         }
     },
     filters: {
@@ -244,6 +266,9 @@ export default {
         },
         statusLabel: function(status) {
             return statusLabel(status);
+        },
+        statusUsageLabel: function(status) {
+            return statusUsageLabel(status);
         }
     }
 };
