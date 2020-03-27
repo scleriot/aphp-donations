@@ -2,10 +2,10 @@
     <v-container fluid>
         <v-row>
             <v-col cols="12" md="4" lg="3">
-                <v-btn color="success" @click="addNewDonation">Ajouter un nouveau don</v-btn>
+                <v-btn color="primary" @click="addNewDonation" outlined>Ajouter un nouveau don</v-btn>
             </v-col>
             <v-col cols="12" md="4" lg="3">
-                <v-btn color="warning" @click="downloadXLS">Télécharger Excel</v-btn>
+                <v-btn color="primary" @click="downloadXLS">Télécharger Excel</v-btn>
             </v-col>
         </v-row>
         <v-row>
@@ -67,8 +67,8 @@
                         {{ item.unit }}
                     </template>
                     <template v-slot:item.actions="{ item }">
-                        <v-btn color="warning" @click="edit(item.id)">Éditer</v-btn>&nbsp;
-                        <v-btn color="success" @click="repartition(item.id)">Répartir</v-btn>
+                        <v-btn color="primary" @click="edit(item.id)"><v-icon>mdi-pencil</v-icon></v-btn>&nbsp;
+                        <v-btn color="primary" @click="repartition(item.id)" outlined>Répartir</v-btn>
                     </template>
                     <template
                         v-slot:item.status_usage="{ item }"

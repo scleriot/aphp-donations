@@ -44,7 +44,7 @@
                                 ></v-autocomplete>
                             </v-col>
                             <v-col cols="2" v-if="selectedUser">
-                                <v-btn color="warning" @click="downloadXLS">Télécharger Excel</v-btn>
+                                <v-btn color="primary" @click="downloadXLS">Télécharger Excel</v-btn>
                             </v-col>
                         </v-row>
                         <v-row>

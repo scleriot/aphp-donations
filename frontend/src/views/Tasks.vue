@@ -30,9 +30,9 @@
                                         </p>
                                     </v-card-text>
                                     <v-card-actions>
-                                        <v-btn color="warning" @click="edit(opp.id)" text>Éditer</v-btn>&nbsp;
+                                        <v-btn color="secondary" @click="edit(opp.id)" text>Éditer</v-btn>&nbsp;
                                         <v-btn
-                                            color="success"
+                                            color="primary"
                                             @click="repartition(opp.id)"
                                             text
                                         >Répartir</v-btn>
