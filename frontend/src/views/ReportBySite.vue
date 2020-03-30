@@ -235,7 +235,7 @@ export default {
 
     filters: {
         dateHuman: function(date) {
-            return moment(date).format("dddd DD/MM/YYYY");
+            return date ? moment(date).format("dddd DD/MM/YYYY") : "";
         },
         statusLabel: function(status) {
             return statusLabel(status)

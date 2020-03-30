@@ -85,6 +85,7 @@
                                             v-model="form.pledgDate"
                                             label="Date de l'offre"
                                             readonly
+                                            clearable
                                             v-on="on"
                                         ></v-text-field>
                                     </template>
@@ -118,6 +119,7 @@
                                             v-model="form.plannedDeliveryDate"
                                             label="Date de réception du don prévue"
                                             readonly
+                                            clearable
                                             v-on="on"
                                         ></v-text-field>
                                     </template>
@@ -305,7 +307,7 @@ export default {
                         return this.id === null;
                     }
                 });
-                this.form = { ...donation, user: donation.user.id };
+                this.form = { ...donation, user: donation.user ? donation.user.id : null };
             } else {
                 this.form = {
                     id: null,
@@ -349,11 +351,11 @@ export default {
                             $quantity: Int!
                             $unit: String!
                             $receivedAPHP: Boolean!
-                            $plannedDeliveryDate: Date!
+                            $plannedDeliveryDate: Date
                             $measurable: Boolean!
                             $status: ENUM_DONATION_STATUS!
                             $status_usage: ENUM_DONATION_STATUS_USAGE!
-                            $pledgDate: Date!
+                            $pledgDate: Date
                             $user: ID,
                             $taxExemptionGiven: Boolean!
                         ) {
@@ -431,11 +433,11 @@ export default {
                             $quantity: Int!
                             $unit: String!
                             $receivedAPHP: Boolean!
-                            $plannedDeliveryDate: Date!
+                            $plannedDeliveryDate: Date
                             $measurable: Boolean!
                             $status: ENUM_DONATION_STATUS!
                             $status_usage: ENUM_DONATION_STATUS_USAGE!
-                            $pledgDate: Date!
+                            $pledgDate: Date
                             $user: ID
                             $taxExemptionGiven: Boolean!
                         ) {

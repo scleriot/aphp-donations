@@ -253,9 +253,15 @@ export default {
                 Contact: e.contact,
                 Role: e.role,
                 Email: e.email,
+                Telephone1: e.telephone1,
+                Telephone2: e.telephone2,
+                "Type de don": this.types.find(t => t.value === e.type).text,
                 Don: `${e.measurable ? e.quantity + " " : ""}${e.unit}`,
                 "Date promesse": e.pledgDate,
                 "Date livraison": e.plannedDeliveryDate,
+                "Statut du traitement": this.$options.filters.statusUsageLabel(e.status_usage),
+                "Personne en charge": e.user ? e.user.name : "",
+                "Justificatif de défiscalisation donné ?": e.taxExemptionGiven ? "Oui" : "Non",
                 Commentaire: e.comment
             }));
 
@@ -285,7 +291,7 @@ export default {
     },
     filters: {
         dateHuman: function(date) {
-            return moment(date).format("dddd DD/MM/YYYY");
+            return date ? moment(date).format("dddd DD/MM/YYYY") : "";
         },
         statusLabel: function(status) {
             return statusLabel(status);
