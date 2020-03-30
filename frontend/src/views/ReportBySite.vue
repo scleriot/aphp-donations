@@ -44,7 +44,6 @@
                                 <v-data-table
                                     :headers="headers"
                                     :items="donations"
-                                    hide-default-footer
                                     class="elevation-1"
                                     item-key="id"
                                 >

@@ -42,7 +42,6 @@
                 <v-data-table
                     :headers="headers"
                     :items="filteredDonations"
-                    hide-default-footer
                     class="elevation-1"
                     item-key="id"
                 >

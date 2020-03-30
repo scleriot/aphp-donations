@@ -72,7 +72,7 @@
                         <v-row>
                             <v-col cols="4">
                                 <v-menu
-                                    ref="menuDate"
+                                    ref="menuDatePledg"
                                     v-model="menuDatePledg"
                                     :close-on-content-click="false"
                                     :return-value.sync="form.pledgDate"
@@ -98,14 +98,14 @@
                                         <v-btn
                                             text
                                             color="primary"
-                                            @click="$refs.menuDate.save(form.pledgDate)"
+                                            @click="$refs.menuDatePledg.save(form.pledgDate)"
                                         >OK</v-btn>
                                     </v-date-picker>
                                 </v-menu>
                             </v-col>
                             <v-col cols="4">
                                 <v-menu
-                                    ref="menuDate"
+                                    ref="menuDateDelivery"
                                     v-model="menuDateDelivery"
                                     :close-on-content-click="false"
                                     :return-value.sync="form.plannedDeliveryDate"
@@ -135,7 +135,7 @@
                                         <v-btn
                                             text
                                             color="primary"
-                                            @click="$refs.menuDate.save(form.plannedDeliveryDate)"
+                                            @click="$refs.menuDateDelivery.save(form.plannedDeliveryDate)"
                                         >OK</v-btn>
                                     </v-date-picker>
                                 </v-menu>
@@ -243,10 +243,10 @@ export default {
                 unit: "",
                 comment: "",
                 receivedAPHP: false,
-                plannedDeliveryDate: moment().format("YYYY-MM-DD"),
+                plannedDeliveryDate: null,
                 status: "pledg",
                 status_usage: "tobeprocessed",
-                pledgDate: moment().format("YYYY-MM-DD"),
+                pledgDate: null,
                 taxExemptionGiven: false,
                 user: null
             }
@@ -321,10 +321,10 @@ export default {
                     unit: "",
                     comment: "",
                     receivedAPHP: false,
-                    plannedDeliveryDate: moment().format("YYYY-MM-DD"),
+                    plannedDeliveryDate: null,
                     status: "pledg",
                     status_usage: "tobeprocessed",
-                    pledgDate: moment().format("YYYY-MM-DD"),
+                    pledgDate: null,
                     taxExemptionGiven: false,
                     user: null
                 };
