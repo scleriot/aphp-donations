@@ -72,7 +72,8 @@ export default {
                 { id: "tobeprocessed", text: "À traiter" },
                 { id: "processing", text: "En cours" },
                 { id: "processed", text: "Traité" }
-            ]
+            ],
+            donations: []
         };
     },
     apollo: {

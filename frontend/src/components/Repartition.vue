@@ -1,7 +1,6 @@
 <template>
     <v-dialog
         v-model="showDialog"
-        max-width="1000"
         :persistent="true"
         :fullscreen="$vuetify.breakpoint.mdAndDown"
         scrollable
@@ -60,8 +59,48 @@
                                 ></v-autocomplete>
                             </template>
 
+                            <template v-slot:item.deliveryDate="{ item }">
+                                <v-menu
+                                    :ref="`menuDate${item.id}`"
+                                    v-model="item.menuDateDelivery"
+                                    :close-on-content-click="false"
+                                    :return-value.sync="item.deliveryDate"
+                                    transition="scale-transition"
+                                    offset-y
+                                    min-width="290px"
+                                >
+                                    <template v-slot:activator="{ on }">
+                                        <v-text-field
+                                            v-model="item.deliveryDate"
+                                            readonly
+                                            v-on="on"
+                                        ></v-text-field>
+                                    </template>
+                                    <v-date-picker
+                                        v-model="item.deliveryDate"
+                                        no-title
+                                        scrollable
+                                        @input="updateDeliveryDate(item.id)"
+                                    >
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                            text
+                                            color="primary"
+                                            @click="item.menuDateDelivery = false"
+                                        >Cancel</v-btn>
+                                        <v-btn
+                                            text
+                                            color="primary"
+                                            @click="$refs[`menuDate${item.id}`].save(item.deliveryDate)"
+                                        >OK</v-btn>
+                                    </v-date-picker>
+                                </v-menu>
+                            </template>
+
                             <template v-slot:item.actions="{ item }">
-                                <v-btn color="error" @click="deleteRepartition(item.id)">Supprimer</v-btn>
+                                <v-btn color="error" @click="deleteRepartition(item.id)">
+                                    <v-icon>mdi-delete-forever</v-icon>
+                                </v-btn>
                             </template>
                         </v-data-table>
                     </v-col>
@@ -94,6 +133,7 @@ export default {
                 { text: "Quantité", value: "quantity" },
                 { text: "Don", value: "donation.unit", sortable: false },
                 { text: "Donateur", value: "donation.donor", sortable: false },
+                { text: "Date de livraison", value: "deliveryDate" },
                 { text: "Actions", value: "actions", sortable: false }
             ],
             GHUS: [
@@ -103,6 +143,7 @@ export default {
                 { text: "GHU Paris Sorbonne", value: "GHU_Paris_Sorbonne" },
                 { text: "GHU Paris Saclay", value: "GHU_Paris_Saclay" },
                 { text: "GHU HM", value: "GHU_HM" },
+                { text: "Autre", value: "Autre" }
             ]
         };
     },
@@ -167,6 +208,7 @@ export default {
                                 quantity
                                 GHU
                                 services
+                                deliveryDate
                                 recipient {
                                     id
                                     name
@@ -181,11 +223,12 @@ export default {
                             }
                         }
                     `,
+                    fetchPolicy: 'no-cache',
                     variables: {
                         donationID: this.donationID
                     }
                 });
-                this.repartitions = repartitions;
+                this.repartitions = repartitions.map(e => ({ ...e, menuDateDelivery: false }));
             }
         }
     },
@@ -283,6 +326,29 @@ export default {
             });
         }, 1000),
 
+        updateDeliveryDate: debounce(function(id) {
+            this.$apollo.mutate({
+                mutation: gql`
+                    mutation($id: ID!, $deliveryDate: Date) {
+                        updateDonationRepartition(
+                            input: {
+                                where: { id: $id }
+                                data: { deliveryDate: $deliveryDate }
+                            }
+                        ) {
+                            donationRepartition {
+                                id
+                            }
+                        }
+                    }
+                `,
+                variables: {
+                    id,
+                    deliveryDate: this.repartitions.find(e => e.id === id).deliveryDate
+                }
+            });
+        }, 1000),
+
         async addSite() {
             const { data: { createDonationRepartition: { donationRepartition } } } = await this.$apollo.mutate({
                 mutation: gql`
@@ -300,6 +366,7 @@ export default {
                                 quantity
                                 GHU
                                 services
+                                deliveryDate
                                 recipient {
                                     id
                                     name

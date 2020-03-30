@@ -28,7 +28,8 @@
         "GHU_Paris_Centre",
         "GHU_Paris_Sorbonne",
         "GHU_Paris_Saclay",
-        "GHU_HM"
+        "GHU_HM",
+        "Autre"
       ]
     },
     "services": {

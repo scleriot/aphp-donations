@@ -51,11 +51,11 @@
     },
     "quantity": {
       "type": "integer",
-      "required": true
+      "required": false
     },
     "unit": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "receivedAPHP": {
       "type": "boolean",
@@ -78,7 +78,7 @@
         "received",
         "distributed"
       ],
-      "required": true,
+      "required": false,
       "default": "pledg"
     },
     "status_usage": {
@@ -89,11 +89,11 @@
         "processed"
       ],
       "default": "tobeprocessed",
-      "required": true
+      "required": false
     },
     "pledgDate": {
       "type": "date",
-      "required": true
+      "required": false
     },
     "repartitions": {
       "via": "donation",

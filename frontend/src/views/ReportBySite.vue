@@ -140,6 +140,7 @@ export default {
                 { text: "GHU Paris Sorbonne", value: "GHU_Paris_Sorbonne" },
                 { text: "GHU Paris Saclay", value: "GHU_Paris_Saclay" },
                 { text: "GHU HM", value: "GHU_HM" },
+                { text: "Autre", value: "Autre" }
             ]
         };
     },

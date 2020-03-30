@@ -67,7 +67,9 @@
                         {{ item.unit }}
                     </template>
                     <template v-slot:item.actions="{ item }">
-                        <v-btn color="primary" @click="edit(item.id)"><v-icon>mdi-pencil</v-icon></v-btn>&nbsp;
+                        <v-btn color="primary" @click="edit(item.id)">
+                            <v-icon>mdi-pencil</v-icon>
+                        </v-btn>&nbsp;
                         <v-btn color="primary" @click="repartition(item.id)" outlined>Répartir</v-btn>
                     </template>
                     <template
@@ -75,7 +77,9 @@
                     >{{ item.status_usage | statusUsageLabel }}</template>
                     <template
                         v-slot:item.owner="{ item }"
-                    >{{ item.user.firstname }} {{ item.user.lastname }}</template>
+                    >
+                        <template v-if="item.user">{{ item.user.firstname }} {{ item.user.lastname }}</template>
+                    </template>
                     <template v-slot:item.taxExemptionGiven="{ item }">
                         <template v-if="item.taxExemptionGiven">Oui</template>
                         <template v-else>Non</template>
@@ -124,11 +128,17 @@ export default {
                 { text: "Donateur", value: "donor" },
                 { text: "Don", value: "donation", sortable: false },
                 { text: "Statut du don", value: "status" },
-                { text: "Date livraison prévue", value: "plannedDeliveryDate" },
+                {
+                    text: "Date de réception prévue",
+                    value: "plannedDeliveryDate"
+                },
                 { text: "Personne en charge", value: "owner", sortable: false },
                 { text: "Statut du traitement", value: "status_usage" },
                 { text: "Actions", value: "actions", sortable: false },
-                { text: "Justificatif défiscalisation donné ?", value: "taxExemptionGiven" }
+                {
+                    text: "Justificatif défiscalisation donné ?",
+                    value: "taxExemptionGiven"
+                }
             ],
             types: [
                 { text: "Tous", value: "" },
@@ -176,6 +186,7 @@ export default {
                     pledgDate
                     taxExemptionGiven
                     user {
+                        id
                         firstname
                         lastname
                     }
@@ -193,6 +204,11 @@ export default {
                     e.status.indexOf(this.formFilter.status) != -1 &&
                     e.status_usage.indexOf(this.formFilter.status_usage) != -1
             );
+        }
+    },
+    watch: {
+        showRepartitionDialog() {
+            if(!this.showRepartitionDialog) this.repartitionDonationID = null
         }
     },
     methods: {

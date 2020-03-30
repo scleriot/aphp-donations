@@ -2,6 +2,7 @@ module.exports = {
     "transpileDependencies": [
         "vuetify",
         "vuetify-dialog",
+        "vue-apollo",
         "vue-kanban",
         "strapi-sdk-javascript",
         "unfetch"

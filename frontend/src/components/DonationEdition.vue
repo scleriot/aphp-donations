@@ -245,7 +245,7 @@ export default {
                 receivedAPHP: false,
                 plannedDeliveryDate: moment().format("YYYY-MM-DD"),
                 status: "pledg",
-                status_usage: "pledg",
+                status_usage: "tobeprocessed",
                 pledgDate: moment().format("YYYY-MM-DD"),
                 taxExemptionGiven: false,
                 user: null
@@ -323,7 +323,7 @@ export default {
                     receivedAPHP: false,
                     plannedDeliveryDate: moment().format("YYYY-MM-DD"),
                     status: "pledg",
-                    status_usage: "pledg",
+                    status_usage: "tobeprocessed",
                     pledgDate: moment().format("YYYY-MM-DD"),
                     taxExemptionGiven: false,
                     user: null
@@ -354,7 +354,7 @@ export default {
                             $status: ENUM_DONATION_STATUS!
                             $status_usage: ENUM_DONATION_STATUS_USAGE!
                             $pledgDate: Date!
-                            $user: ID!,
+                            $user: ID,
                             $taxExemptionGiven: Boolean!
                         ) {
                             createDonation(
@@ -402,6 +402,8 @@ export default {
                                     taxExemptionGiven
                                     user {
                                         id
+                                        firstname
+                                        lastname
                                     }
                                 }
                             }
@@ -434,7 +436,7 @@ export default {
                             $status: ENUM_DONATION_STATUS!
                             $status_usage: ENUM_DONATION_STATUS_USAGE!
                             $pledgDate: Date!
-                            $user: ID!
+                            $user: ID
                             $taxExemptionGiven: Boolean!
                         ) {
                             updateDonation(
@@ -483,6 +485,8 @@ export default {
                                     taxExemptionGiven
                                     user {
                                         id
+                                        firstname
+                                        lastname
                                     }
                                 }
                             }
@@ -495,6 +499,7 @@ export default {
                 });
             }
 
+            this.$emit("update:donationID", null)
             this.$emit("update:dialog", false);
         },
         async remove() {
@@ -573,6 +578,7 @@ export default {
                     }
                 });
                 this.$emit("donation-delete", this.id)
+                this.$emit("update:donationID", null)
                 this.$emit("update:dialog", false);
             }
         }
