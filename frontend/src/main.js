@@ -11,7 +11,7 @@ import router from './router'
 import vuetify from './plugins/vuetify';
 import { createProvider } from './vue-apollo'
 import store from './store'
-import "./style.scss"
+import "./scss/style.scss"
 
 Vue.config.productionTip = false
 

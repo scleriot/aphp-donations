@@ -132,6 +132,8 @@ export default {
                 { text: "Alimentation", value: "food" },
                 { text: "Compétences-RH", value: "hr" },
                 { text: "Bien-être", value: "wellbeing" },
+                { text: "Transport", value: "transport" },
+                { text: "Hébergement", value: "hosting" },
                 { text: "Autre", value: "others" }
             ],
             status: [

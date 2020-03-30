@@ -25,7 +25,7 @@
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="12">
-                                <v-btn color="success" :loading="loading" @click="handleSubmit">Connexion</v-btn>
+                                <v-btn color="primary" :loading="loading" @click="handleSubmit">Connexion</v-btn>
                             </v-col>
                         </v-row>
                     </v-card-text>

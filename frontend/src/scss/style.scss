@@ -21,10 +21,10 @@ tbody tr:nth-of-type(odd) {
     min-width: auto !important;
 }
 
-.v-application .primary {
-    background-color: #011f45 !important;
-border-color: #011f45 !important;
-}.v-application .secondary {
+.v-application#myapp .primary {
+    background-color: #021F45 !important;
+    border-color: #021F45 !important;
+}.v-application#myapp .secondary {
     background-color: #011f45 !important;
 }/* boutons */.v-btn {
     letter-spacing: 0;

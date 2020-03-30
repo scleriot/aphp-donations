@@ -1,7 +1,7 @@
 <template>
     <v-dialog
         v-model="showDialog"
-        max-width="900"
+        max-width="1000"
         :persistent="true"
         :fullscreen="$vuetify.breakpoint.mdAndDown"
         scrollable
@@ -24,6 +24,22 @@
                             class="elevation-1"
                             item-key="id"
                         >
+                            <template v-slot:item.GHU="{ item }">
+                                <v-autocomplete
+                                    :items="GHUS"
+                                    v-model="item.GHU"
+                                    item-text="text"
+                                    item-key="value"
+                                    @change="updateGHU(item.id)"
+                                ></v-autocomplete>
+                            </template>
+                            <template v-slot:item.services="{ item }">
+                                <v-text-field
+                                    v-model="item.services"
+                                    @change="updateServices(item.id)"
+                                    required
+                                ></v-text-field>
+                            </template>
                             <template v-slot:item.quantity="{ item }">
                                 <v-text-field
                                     type="number"
@@ -72,11 +88,21 @@ export default {
             showDialog: false,
             repartitions: [],
             headers: [
+                { text: "GHU", value: "GHU" },
                 { text: "Site", value: "recipient" },
+                { text: "Services", value: "services" },
                 { text: "Quantité", value: "quantity" },
                 { text: "Don", value: "donation.unit", sortable: false },
                 { text: "Donateur", value: "donation.donor", sortable: false },
                 { text: "Actions", value: "actions", sortable: false }
+            ],
+            GHUS: [
+                { text: "GHU PSSD", value: "GHU_PSSD" },
+                { text: "GHU Paris Nord", value: "GHU_Paris_Nord" },
+                { text: "GHU Paris Centre", value: "GHU_Paris_Centre" },
+                { text: "GHU Paris Sorbonne", value: "GHU_Paris_Sorbonne" },
+                { text: "GHU Paris Saclay", value: "GHU_Paris_Saclay" },
+                { text: "GHU HM", value: "GHU_HM" },
             ]
         };
     },
@@ -139,6 +165,8 @@ export default {
                             ) {
                                 id
                                 quantity
+                                GHU
+                                services
                                 recipient {
                                     id
                                     name
@@ -209,6 +237,52 @@ export default {
             });
         }, 1000),
 
+        updateServices: debounce(function(id) {
+            this.$apollo.mutate({
+                mutation: gql`
+                    mutation($id: ID!, $services: String!) {
+                        updateDonationRepartition(
+                            input: {
+                                where: { id: $id }
+                                data: { services: $services }
+                            }
+                        ) {
+                            donationRepartition {
+                                id
+                            }
+                        }
+                    }
+                `,
+                variables: {
+                    id,
+                    services: this.repartitions.find(e => e.id === id).services
+                }
+            });
+        }, 1000),
+
+        updateGHU: debounce(function(id) {
+            this.$apollo.mutate({
+                mutation: gql`
+                    mutation($id: ID!, $GHU: ENUM_DONATIONREPARTITION_GHU!) {
+                        updateDonationRepartition(
+                            input: {
+                                where: { id: $id }
+                                data: { GHU: $GHU }
+                            }
+                        ) {
+                            donationRepartition {
+                                id
+                            }
+                        }
+                    }
+                `,
+                variables: {
+                    id,
+                    GHU: this.repartitions.find(e => e.id === id).GHU
+                }
+            });
+        }, 1000),
+
         async addSite() {
             const { data: { createDonationRepartition: { donationRepartition } } } = await this.$apollo.mutate({
                 mutation: gql`
@@ -224,6 +298,8 @@ export default {
                             donationRepartition {
                                 id
                                 quantity
+                                GHU
+                                services
                                 recipient {
                                     id
                                     name

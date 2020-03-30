@@ -14,11 +14,28 @@
       "model": "recipients"
     },
     "donation": {
-      "via": "repartitions",
-      "model": "donation"
+      "model": "donation",
+      "via": "repartitions"
     },
     "quantity": {
       "type": "integer"
+    },
+    "GHU": {
+      "type": "enumeration",
+      "enum": [
+        "GHU_PSSD",
+        "GHU_Paris_Nord",
+        "GHU_Paris_Centre",
+        "GHU_Paris_Sorbonne",
+        "GHU_Paris_Saclay",
+        "GHU_HM"
+      ]
+    },
+    "services": {
+      "type": "text"
+    },
+    "deliveryDate": {
+      "type": "date"
     }
   }
 }

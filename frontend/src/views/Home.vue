@@ -76,6 +76,10 @@
                     <template
                         v-slot:item.owner="{ item }"
                     >{{ item.user.firstname }} {{ item.user.lastname }}</template>
+                    <template v-slot:item.taxExemptionGiven="{ item }">
+                        <template v-if="item.taxExemptionGiven">Oui</template>
+                        <template v-else>Non</template>
+                    </template>
                 </v-data-table>
             </v-col>
         </v-row>
@@ -123,13 +127,16 @@ export default {
                 { text: "Date livraison prévue", value: "plannedDeliveryDate" },
                 { text: "Personne en charge", value: "owner", sortable: false },
                 { text: "Statut du traitement", value: "status_usage" },
-                { text: "Actions", value: "actions", sortable: false }
+                { text: "Actions", value: "actions", sortable: false },
+                { text: "Justificatif défiscalisation donné ?", value: "taxExemptionGiven" }
             ],
             types: [
                 { text: "Tous", value: "" },
                 { text: "Alimentation", value: "food" },
                 { text: "Compétences-RH", value: "hr" },
                 { text: "Bien-être", value: "wellbeing" },
+                { text: "Transport", value: "transport" },
+                { text: "Hébergement", value: "hosting" },
                 { text: "Autre", value: "others" }
             ],
             status: [
@@ -167,6 +174,7 @@ export default {
                     status
                     status_usage
                     pledgDate
+                    taxExemptionGiven
                     user {
                         firstname
                         lastname

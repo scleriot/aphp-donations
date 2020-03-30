@@ -1,5 +1,5 @@
 <template>
-    <v-app>
+    <v-app id="myapp">
         <v-app-bar app color="primary" dark>
             <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
             <v-toolbar-title
@@ -18,7 +18,7 @@
             </template>
         </v-app-bar>
 
-        <v-navigation-drawer dark v-model="drawer" app v-if="user" color="secondary">
+        <v-navigation-drawer dark v-model="drawer" app v-if="user" color="primary">
             <v-list>
                 <v-list-item @click="$router.push({ name: 'Home' })">
                     <v-list-item-action>

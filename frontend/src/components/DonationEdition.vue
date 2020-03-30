@@ -171,6 +171,9 @@
                                     item-value="value"
                                 ></v-autocomplete>
                             </v-col>
+                            <v-col cols="4">
+                                <v-checkbox v-model="form.taxExemptionGiven" label="Jusficatif de défiscalisation donné"></v-checkbox>
+                            </v-col>
                         </v-row>
 
                         <v-row>
@@ -211,6 +214,8 @@ export default {
             types: [
                 { text: "Alimentation", value: "food" },
                 { text: "Compétences-RH", value: "hr" },
+                { text: "Transport", value: "transport" },
+                { text: "Hébergement", value: "hosting" },
                 { text: "Bien-être", value: "wellbeing" },
                 { text: "Autre", value: "others" }
             ],
@@ -242,6 +247,7 @@ export default {
                 status: "pledg",
                 status_usage: "pledg",
                 pledgDate: moment().format("YYYY-MM-DD"),
+                taxExemptionGiven: false,
                 user: null
             }
         };
@@ -285,6 +291,7 @@ export default {
                                 status
                                 status_usage
                                 pledgDate
+                                taxExemptionGiven
                                 user {
                                     id
                                 }
@@ -318,6 +325,7 @@ export default {
                     status: "pledg",
                     status_usage: "pledg",
                     pledgDate: moment().format("YYYY-MM-DD"),
+                    taxExemptionGiven: false,
                     user: null
                 };
             }
@@ -346,7 +354,8 @@ export default {
                             $status: ENUM_DONATION_STATUS!
                             $status_usage: ENUM_DONATION_STATUS_USAGE!
                             $pledgDate: Date!
-                            $user: ID!
+                            $user: ID!,
+                            $taxExemptionGiven: Boolean!
                         ) {
                             createDonation(
                                 input: {
@@ -368,6 +377,7 @@ export default {
                                         status_usage: $status_usage
                                         pledgDate: $pledgDate
                                         user: $user
+                                        taxExemptionGiven: $taxExemptionGiven
                                     }
                                 }
                             ) {
@@ -389,6 +399,7 @@ export default {
                                     status
                                     status_usage
                                     pledgDate
+                                    taxExemptionGiven
                                     user {
                                         id
                                     }
@@ -424,6 +435,7 @@ export default {
                             $status_usage: ENUM_DONATION_STATUS_USAGE!
                             $pledgDate: Date!
                             $user: ID!
+                            $taxExemptionGiven: Boolean!
                         ) {
                             updateDonation(
                                 input: {
@@ -446,6 +458,7 @@ export default {
                                         status_usage: $status_usage
                                         pledgDate: $pledgDate
                                         user: $user
+                                        taxExemptionGiven: $taxExemptionGiven
                                     }
                                 }
                             ) {
@@ -467,6 +480,7 @@ export default {
                                     status
                                     status_usage
                                     pledgDate
+                                    taxExemptionGiven
                                     user {
                                         id
                                     }

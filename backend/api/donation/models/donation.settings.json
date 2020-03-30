@@ -35,6 +35,8 @@
       "enum": [
         "food",
         "wellbeing",
+        "transport",
+        "hosting",
         "hr",
         "others"
       ],
@@ -94,8 +96,12 @@
       "required": true
     },
     "repartitions": {
-      "collection": "donation-repartition",
-      "via": "donation"
+      "via": "donation",
+      "collection": "donation-repartition"
+    },
+    "taxExemptionGiven": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

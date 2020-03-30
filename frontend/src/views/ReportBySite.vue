@@ -8,12 +8,22 @@
                         <v-row>
                             <v-col cols="12" sm="6" md="3">
                                 <v-autocomplete
+                                    :items="GHUS"
+                                    v-model="formFilter.GHU"
+                                    label="GHU"
+                                    item-text="text"
+                                    item-key="value"
+                                ></v-autocomplete>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="3">
+                                <v-autocomplete
                                     :items="recipients"
                                     v-model="selectedRecipient"
                                     label="Établissement"
                                     item-text="name"
                                     item-key="id"
                                     return-object
+                                    clearable
                                 ></v-autocomplete>
                             </v-col>
                             <v-col cols="12" sm="6" md="2">
@@ -25,7 +35,7 @@
                                     item-value="value"
                                 ></v-autocomplete>
                             </v-col>
-                            <v-col cols="2" v-if="selectedRecipient">
+                            <v-col cols="2">
                                 <v-btn color="primary" @click="downloadXLS">Télécharger Excel</v-btn>
                             </v-col>
                         </v-row>
@@ -90,9 +100,13 @@ export default {
             formFilter: {
                 type: "",
                 status: "",
-                status_usage: ""
+                status_usage: "",
+                GHU: ""
             },
             headers: [
+                { text: "GHU", value: "GHU" },
+                { text: "Site", value: "recipient_name" },
+                { text: "Services", value: "services" },
                 { text: "Donateur", value: "donor" },
                 { text: "Don", value: "donation", sortable: false },
                 { text: "Date livraison", value: "plannedDeliveryDate" }
@@ -102,6 +116,8 @@ export default {
                 { text: "Alimentation", value: "food" },
                 { text: "Compétences-RH", value: "hr" },
                 { text: "Bien-être", value: "wellbeing" },
+                { text: "Transport", value: "transport" },
+                { text: "Hébergement", value: "hosting" },
                 { text: "Autre", value: "others" }
             ],
             status: [
@@ -115,6 +131,15 @@ export default {
                 { text: "À traiter", value: "tobeprocessed" },
                 { text: "Traitement en cours", value: "processing" },
                 { text: "Traité", value: "processed" }
+            ],
+            GHUS: [
+                { text: "Tous", value: "" },
+                { text: "GHU PSSD", value: "GHU_PSSD" },
+                { text: "GHU Paris Nord", value: "GHU_Paris_Nord" },
+                { text: "GHU Paris Centre", value: "GHU_Paris_Centre" },
+                { text: "GHU Paris Sorbonne", value: "GHU_Paris_Sorbonne" },
+                { text: "GHU Paris Saclay", value: "GHU_Paris_Saclay" },
+                { text: "GHU HM", value: "GHU_HM" },
             ]
         };
     },
@@ -129,12 +154,16 @@ export default {
         `,
         donationRepartitions: {
             query: gql`
-                query($recipientId: ID!) {
-                    donationRepartitions(
-                        where: { recipient: { id: $recipientId } }
-                    ) {
+                query {
+                    donationRepartitions {
                         id
                         quantity
+                        GHU
+                        services
+                        recipient {
+                            id
+                            name
+                        }
                         donation {
                             id
                             donor
@@ -156,15 +185,7 @@ export default {
                         }
                     }
                 }
-            `,
-            skip() {
-                return this.selectedRecipient === null;
-            },
-            variables() {
-                return {
-                    recipientId: this.selectedRecipient.id
-                };
-            }
+            `
         }
     },
     computed: {
@@ -173,32 +194,37 @@ export default {
 
             return this.donationRepartitions
                 .filter(e =>
+                    (!e.GHU || e.GHU.indexOf(this.formFilter.GHU) != -1) &&
+                    (!e.recipient || e.recipient.id === (this.selectedRecipient ? this.selectedRecipient.id : e.recipient.id)) &&
                     e.donation.type.indexOf(this.formFilter.type) != -1 &&
                     e.donation.status.indexOf(this.formFilter.status) != -1 &&
                     e.donation.status_usage.indexOf(this.formFilter.status_usage) != -1
                 )
-                .map(e => ({ ...e.donation, quantity: e.quantity }))
+                .map(e => ({
+                    ...e.donation,
+                    quantity: e.quantity,
+                    GHU: e.GHU ? e.GHU.replace(/_/g, " ") : "",
+                    services: e.services,
+                    recipient_name: e.recipient ? e.recipient.name : ""
+                }))
         }
     },
 
     methods: {
         downloadXLS() {
             let data = this.donations.map(e => ({
-                "Statut du don": this.$options.filters.statusLabel(e.status),
+                GHU: e.GHU,
+                Site: e.recipient_name,
+                Services: e.services,
                 Donateur: e.donor,
-                Contact: e.contact,
-                Role: e.role,
-                Email: e.email,
                 Don: `${e.measurable ? e.quantity + " " : ""}${e.unit}`,
-                "Date promesse": e.pledgDate,
-                "Date livraison": e.plannedDeliveryDate,
-                Commentaire: e.comment
+                "Date livraison": e.plannedDeliveryDate
             }));
 
             try {
                 json2excel({
                     data,
-                    name: `${moment().format("YYYYMMDD-HHmm")} ${this.selectedRecipient.name}`.substring(0, 30),
+                    name: `${moment().format("YYYYMMDD-HHmm")} ${this.formFilter.GHU}${this.selectedRecipient ? " "+this.selectedRecipient.name: ""}`.substring(0, 30),
                     formateDate: "dd/mm/yyyy"
                 });
             } catch (e) {
