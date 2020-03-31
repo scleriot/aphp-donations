@@ -9,7 +9,7 @@
             </v-col>
         </v-row>
         <v-row>
-            <v-col cols="12" sm="6" md="3">
+            <v-col cols="12" sm="6" md="2">
                 <v-autocomplete
                     :items="types"
                     label="Type de don"
@@ -18,7 +18,7 @@
                     item-value="value"
                 ></v-autocomplete>
             </v-col>
-            <v-col cols="12" sm="6" md="3">
+            <v-col cols="12" sm="6" md="2">
                 <v-autocomplete
                     :items="status"
                     label="Statut"
@@ -27,7 +27,7 @@
                     item-value="value"
                 ></v-autocomplete>
             </v-col>
-            <v-col cols="12" sm="6" md="3">
+            <v-col cols="12" sm="6" md="2">
                 <v-autocomplete
                     :items="status_usage"
                     label="Statut opérationnel"
@@ -35,6 +35,23 @@
                     item-text="text"
                     item-value="value"
                 ></v-autocomplete>
+            </v-col>
+            <v-col cols="12" sm="6" md="2">
+                <v-autocomplete
+                    :items="userList"
+                    label="Personne"
+                    v-model="formFilter.user"
+                    item-text="text"
+                    item-value="value"
+                ></v-autocomplete>
+            </v-col>
+            <v-col cols="12" sm="6" md="2">
+                <v-text-field
+                    v-model="formFilter.donor"
+                    label="Donateur"
+                    required
+                    clearable
+                ></v-text-field>
             </v-col>
         </v-row>
         <v-row>
@@ -121,8 +138,11 @@ export default {
             formFilter: {
                 type: "",
                 status: "",
-                status_usage: ""
+                status_usage: "",
+                user: null,
+                donor: ""
             },
+            users: [],
             headers: [
                 { text: "Donateur", value: "donor" },
                 { text: "Don", value: "donation", sortable: false },
@@ -163,6 +183,15 @@ export default {
         };
     },
     apollo: {
+        users: gql`
+            query {
+                users {
+                    id
+                    firstname
+                    lastname
+                }
+            }
+        `,
         donations: gql`
             query {
                 donations {
@@ -199,10 +228,18 @@ export default {
 
             return this.donations.filter(
                 e =>
+                    (!this.formFilter.user || e.user && e.user.id === this.formFilter.user) &&
                     e.type.indexOf(this.formFilter.type) != -1 &&
                     e.status.indexOf(this.formFilter.status) != -1 &&
-                    e.status_usage.indexOf(this.formFilter.status_usage) != -1
+                    e.status_usage.indexOf(this.formFilter.status_usage) != -1 &&
+                    (!this.formFilter.donor || e.donor.indexOf(this.formFilter.donor) != -1)
             );
+        },
+        userList() {
+            return [
+                { text: "Tous", value: null },
+                ...this.users.map(e => ({ text: `${e.firstname} ${e.lastname}`, value: e.id }))
+            ]
         }
     },
     watch: {

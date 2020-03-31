@@ -30,7 +30,13 @@
                         </v-row>
                         <v-row>
                             <v-col cols="6">
-                                <v-text-field v-model="form.email" label="Email" required></v-text-field>
+                                <v-text-field
+                                    type="email"
+                                    v-model="form.email"
+                                    label="Email"
+                                    :rules="[rules.email]"
+                                    validate-on-blur
+                                ></v-text-field>
                             </v-col>
                             <v-col cols="3">
                                 <v-text-field v-model="form.phone1" label="Téléphone 1" required></v-text-field>
@@ -58,6 +64,7 @@
                                     v-model.number="form.quantity"
                                     label="Quantité"
                                     required
+                                    validate-on-blur
                                 ></v-text-field>
                             </v-col>
                             <v-col :cols="form.measurable ? 4 : 6">
@@ -174,7 +181,10 @@
                                 ></v-autocomplete>
                             </v-col>
                             <v-col cols="4">
-                                <v-checkbox v-model="form.taxExemptionGiven" label="Jusficatif de défiscalisation donné"></v-checkbox>
+                                <v-checkbox
+                                    v-model="form.taxExemptionGiven"
+                                    label="Jusficatif de défiscalisation donné"
+                                ></v-checkbox>
                             </v-col>
                         </v-row>
 
@@ -251,6 +261,13 @@ export default {
                 pledgDate: null,
                 taxExemptionGiven: false,
                 user: null
+            },
+
+            rules: {
+                email: value => {
+                    const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                    return pattern.test(value) || "Email non valide.";
+                }
             }
         };
     },
@@ -307,7 +324,10 @@ export default {
                         return this.id === null;
                     }
                 });
-                this.form = { ...donation, user: donation.user ? donation.user.id : null };
+                this.form = {
+                    ...donation,
+                    user: donation.user ? donation.user.id : null
+                };
             } else {
                 this.form = {
                     id: null,
@@ -337,7 +357,11 @@ export default {
         async save() {
             if (!this.form.id) {
                 // CREATE
-                const { data: { createDonation: { donation } } } = await this.$apollo.mutate({
+                const {
+                    data: {
+                        createDonation: { donation }
+                    }
+                } = await this.$apollo.mutate({
                     mutation: gql`
                         mutation(
                             $donor: String!
@@ -356,7 +380,7 @@ export default {
                             $status: ENUM_DONATION_STATUS!
                             $status_usage: ENUM_DONATION_STATUS_USAGE!
                             $pledgDate: Date
-                            $user: ID,
+                            $user: ID
                             $taxExemptionGiven: Boolean!
                         ) {
                             createDonation(
@@ -413,10 +437,13 @@ export default {
                     `,
                     variables: {
                         ...this.form,
-                        quantity: this.form.measurable ? this.form.quantity : 1
+                        quantity:
+                            this.form.measurable && this.form.quantity
+                                ? this.form.quantity
+                                : 1
                     }
                 });
-                this.$emit("donation-add", donation)
+                this.$emit("donation-add", donation);
             } else {
                 await this.$apollo.mutate({
                     mutation: gql`
@@ -496,12 +523,15 @@ export default {
                     `,
                     variables: {
                         ...this.form,
-                        quantity: this.form.measurable ? this.form.quantity : 1
+                        quantity:
+                            this.form.measurable && this.form.quantity
+                                ? this.form.quantity
+                                : 1
                     }
                 });
             }
 
-            this.$emit("update:donationID", null)
+            this.$emit("update:donationID", null);
             this.$emit("update:dialog", false);
         },
         async remove() {
@@ -554,33 +584,32 @@ export default {
                         }) {
                             donationRepartition { id }
                         }
-                        `
-                        return acc
-                    }, "")
+                        `;
+                        return acc;
+                    }, "");
                     await this.$apollo.mutate({
                         mutation: gql`mutation {
                             ${graphql}
                         }`
-                    })
+                    });
                 }
 
                 await this.$apollo.mutate({
                     mutation: gql`
                         mutation($id: ID!) {
-                            deleteDonation(input: {
-                                where: { id: $id }
-                            }) {
+                            deleteDonation(input: { where: { id: $id } }) {
                                 donation {
                                     id
                                 }
                             }
-                        }`,
+                        }
+                    `,
                     variables: {
                         id: this.id
                     }
                 });
-                this.$emit("donation-delete", this.id)
-                this.$emit("update:donationID", null)
+                this.$emit("donation-delete", this.id);
+                this.$emit("update:donationID", null);
                 this.$emit("update:dialog", false);
             }
         }
