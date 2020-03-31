@@ -59,6 +59,7 @@
                 <v-data-table
                     :headers="headers"
                     :items="filteredDonations"
+                    :options.sync="tableOptions"
                     class="elevation-1"
                     item-key="id"
                 >
@@ -144,6 +145,9 @@ export default {
                 status_usage: "",
                 user: null,
                 donor: ""
+            },
+            tableOptions: {
+                page: 0
             },
             users: [],
             headers: [
@@ -248,6 +252,9 @@ export default {
     watch: {
         showRepartitionDialog() {
             if(!this.showRepartitionDialog) this.repartitionDonationID = null
+        },
+        filteredDonations() {
+            this.tableOptions.page = 0
         }
     },
     methods: {
@@ -300,7 +307,7 @@ export default {
                 "Date promesse": e.pledgDate,
                 "Date livraison": e.plannedDeliveryDate,
                 "Statut du traitement": this.$options.filters.statusUsageLabel(e.status_usage),
-                "Personne en charge": e.user ? e.user.name : "",
+                "Personne en charge": e.user ? `${e.user.firstname} ${e.user.lastname}` : "",
                 "Justificatif de défiscalisation donné ?": e.taxExemptionGiven ? "Oui" : "Non",
                 Commentaire: e.comment
             }));
