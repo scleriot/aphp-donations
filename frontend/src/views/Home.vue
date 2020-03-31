@@ -82,12 +82,6 @@
                         <template v-if="item.measurable">{{ item.quantity }}</template>
                         {{ item.unit }}
                     </template>
-                    <template v-slot:item.actions="{ item }">
-                        <v-btn color="primary" @click="edit(item.id)">
-                            <v-icon>mdi-pencil</v-icon>
-                        </v-btn>&nbsp;
-                        <v-btn color="primary" @click="repartition(item.id)" outlined>Répartir</v-btn>
-                    </template>
                     <template
                         v-slot:item.status_usage="{ item }"
                     >{{ item.status_usage | statusUsageLabel }}</template>
@@ -99,6 +93,15 @@
                     <template v-slot:item.taxExemptionGiven="{ item }">
                         <template v-if="item.taxExemptionGiven">Oui</template>
                         <template v-else>Non</template>
+                    </template>
+
+                    <template v-slot:item.actions="{ item }">
+                        <br />
+                        <v-btn color="primary" @click="edit(item.id)" style="margin-bottom: 5px; margin-right: 5px;">
+                            <v-icon>mdi-pencil</v-icon>
+                        </v-btn>
+                        <v-btn color="primary" @click="repartition(item.id)" outlined style="margin-bottom: 5px">Répartir</v-btn>
+                        <br /><br />
                     </template>
                 </v-data-table>
             </v-col>
